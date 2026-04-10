@@ -45,7 +45,6 @@ import os
 
 from _asya_utils import actor, flow
 
-
 # static deployment-time configuration can be passed via env vars:
 SCORE_THRESHOLD = int(os.getenv("SCORE_THRESHOLD", 85))
 MAX_ITERATIONS = int(os.getenv("MAX_ITERATIONS", 5))

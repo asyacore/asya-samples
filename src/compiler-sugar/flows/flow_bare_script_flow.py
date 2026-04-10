@@ -23,6 +23,6 @@ def shout(p: dict) -> dict:  # asya: actor
 
 
 def bare_script_flow(p: dict) -> dict:  # asya: flow
-    p = greet(p)   # asya: actor
-    p = shout(p)   # asya: actor
+    p = greet(p)  # asya: actor
+    p = shout(p)  # asya: actor
     return p

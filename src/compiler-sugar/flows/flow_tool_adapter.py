@@ -28,8 +28,9 @@ The adapter is deployed as a separate actor, bridging the tool's typed interface
 with Asya's envelope protocol.
 """
 
-from _asya_utils import actor, flow
 from claude_agent_sdk import tool
+
+from _asya_utils import actor, flow
 
 
 @tool

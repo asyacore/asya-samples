@@ -1,4 +1,4 @@
-from _asya_utils import flow, actor
+from _asya_utils import actor, flow
 
 
 @flow

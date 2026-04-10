@@ -23,7 +23,6 @@ from dataclasses import dataclass
 
 from _asya_utils import actor, flow
 
-
 # ---------------------------------------------------------------------------
 # Typed result models — swap with pydantic BaseModel for identical behavior
 # ---------------------------------------------------------------------------

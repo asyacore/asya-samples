@@ -1,0 +1,108 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v6
+
+    - name: Set up Python
+      run: uv python install 3.13
+
+    - name: Lint
+      run: make lint
+
+  compile:
+    name: Compile flows
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v6
+
+    - name: Set up Python
+      run: uv python install 3.13
+
+    - name: Compile all flows
+      run: make compile
+
+  build:
+    name: "Build: ${{ matrix.category }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        category:
+        - control-flow
+        - compiler-sugar
+        - agentic
+        - resiliency
+        - text-improver
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build image
+      run: docker build -t asya-samples-${{ matrix.category }}:test src/${{ matrix.category }}/
+
+  e2e:
+    name: E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [compile, build]
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v6
+
+    - name: Set up Python
+      run: uv python install 3.13
+
+    - name: Install Helm
+      uses: azure/setup-helm@v4
+      with:
+        version: v3.16.3
+
+    - name: Create k3d cluster
+      uses: AbsaOSS/k3d-action@v2
+      with:
+        cluster-name: asya-samples-e2e
+        args: >-
+          --registry-create asya-samples-registry:0.0.0.0:5111
+          --wait
+
+    - name: Deploy and verify
+      run: make test-e2e

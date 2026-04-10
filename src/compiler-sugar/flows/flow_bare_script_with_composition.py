@@ -31,12 +31,12 @@ def format_output(p: dict) -> dict:  # asya: actor
 def sub_flow(p: dict) -> dict:  # asya: flow
     """Sub-flow: validate then enrich. Inlined when called from main_flow."""
     p = validate(p)  # asya: actor
-    p = enrich(p)    # asya: actor
+    p = enrich(p)  # asya: actor
     return p
 
 
 def main_flow(p: dict) -> dict:  # asya: flow
     """Main flow: runs sub_flow (inlined) then formats output."""
-    p = sub_flow(p)       # asya: flow  (compiler inlines validate -> enrich)
+    p = sub_flow(p)  # asya: flow  (compiler inlines validate -> enrich)
     p = format_output(p)  # asya: actor
     return p

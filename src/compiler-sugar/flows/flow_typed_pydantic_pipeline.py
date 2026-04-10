@@ -39,9 +39,9 @@ Payload contract:
 from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
-from _asya_utils import actor, flow
 from pydantic import BaseModel
 
+from _asya_utils import actor, flow
 
 # =============================================================================
 # Domain: pydantic models

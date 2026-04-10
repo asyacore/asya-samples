@@ -16,8 +16,9 @@ Compile with:
 
 import random
 
-from _asya_utils import actor, flow
 from tenacity import retry, stop_after_attempt
+
+from _asya_utils import actor, flow
 
 
 @flow
